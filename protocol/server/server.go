@@ -46,7 +46,7 @@ func (s *server) Init(sock mangos.ProtocolSocket) {
 	s.sock = sock
 	s.eps = make(map[uint32]*serverEp)
 	s.w.Init()
-	s.sock.SetSendError(mangos.ErrProtoState)
+	s.sock.SetSendError(nil)
 	s.w.Add()
 	go s.sender()
 }
@@ -62,8 +62,8 @@ func (s *server) Shutdown(expire time.Time) {
 
 	for id, peer := range peers {
 		delete(peers, id)
-		mangos.DrainChannel(pees.q, expire)
-		close(pees.q)
+		mangos.DrainChannel(peer.q, expire)
+		close(peer.q)
 	}
 }
 
@@ -171,7 +171,7 @@ func (*server) PeerName() string {
 }
 
 func (s *server) AddEndpoint(ep mangos.Endpoint) {
-	pe := &serverEp{ep: ep, r: r, q: make(chan *mangos.Message, 2)}
+	pe := &serverEp{ep: ep, s: s, q: make(chan *mangos.Message, 2)}
 	pe.w.Init()
 	s.Lock()
 	s.eps[ep.GetID()] = pe
