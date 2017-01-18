@@ -172,6 +172,9 @@ const (
 	// Experimental Protocols - Use at Risk
 
 	ProtoStar = (100 * 16)
+
+	ProtoClient     = (200 * 16)
+	ProtoServer     = (200 * 16) + 1
 )
 
 // ProtocolName returns the name corresponding to a given protocol number.
@@ -188,7 +191,9 @@ func ProtocolName(number uint16) string {
 		ProtoPull:       "pull",
 		ProtoSurveyor:   "surveyor",
 		ProtoRespondent: "respondent",
-		ProtoBus:        "bus"}
+		ProtoBus:        "bus",
+    ProtoClient:     "client",
+    ProtoServer:     "server"}
 	return names[number]
 }
 
